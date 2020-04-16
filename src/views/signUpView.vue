@@ -21,7 +21,8 @@
         :rules="[{ required:true, message:'请输入身份证号'},
           {validator:identityIdrulateOld, message: '该身份证号码是往届生'},
           {validator:identityIdrulateNew, message: '该身份证号码已报名'},
-          {validator:identityIdrulate, message: '身份证号码不正确'}
+          {validator:identityIdrulate, message: '身份证号码不正确'},
+          {validator:identityIdAgerulate, message: '已超过报名年龄上限'}
 
         ]"
       />
@@ -48,6 +49,7 @@
           </van-radio-group>
         </template>
       </van-field>
+      <van-field v-model="userForm.livePlace" label="*家庭住址" />
       <van-field v-model="userForm.guardianName"
                  label="*家长姓名"
                  :rules="[{ required: true, message: '请输入家长姓名' },
@@ -194,6 +196,7 @@ export default {
         guardianPhoneNumber: '',
         guardianName: '',
         guardianRelation: '',
+        livePlace: '',
         specialtyId: '',
         accommodation: '',
         householdType: '',
@@ -285,6 +288,11 @@ export default {
       }
       this.specialitiesValue = value
       this.showPicker = false
+      this.getRequest('/Specialties/specialtyLimitNumebr?specialtyId=' + value).then(resp => {
+        if (resp > 0) {
+          alert('该专业录取人数已超过专业限制，请核实后再报名')
+        }
+      })
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
     onChangeSchoolUniformSize (picker, value, index) {
@@ -483,6 +491,22 @@ export default {
         }
       })
     },
+    identityIdAgerulate (val) {
+      return new Promise(resolve => {
+        if (this.userForm.id === 0) {
+          this.getRequest('/getConfigureById?codeId=1&typeId=1').then(resp => {
+            if (this.userForm.birthday < new Date(resp.type_name).getTime()) {
+              resolve(false)
+            } else {
+              resolve(true)
+            }
+          })
+        } else {
+          console.log(3)
+          resolve(true)
+        }
+      })
+    },
     onFailed (errorInfo) {
       console.log('failed', errorInfo)
     },
@@ -507,10 +531,12 @@ export default {
         totle = totle + tuition
       }
       this.userForm.tuitionShouldCharge = totle
-      if (this.userForm.id) {
+      if (this.userForm.ps !== '') {
         this.putRequest('/Student/update', this.userForm).then(
         )
       } else {
+        this.userForm.registerDate = new Date()
+        this.userForm.ps = '学生:' + this.userForm.name + '在' + this.userForm.registerDate + '报名了。'
         this.userForm.enrollType = 1
         this.postRequest('/Student/insert', this.userForm).then(
         )

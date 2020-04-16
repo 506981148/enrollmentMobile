@@ -3,7 +3,8 @@ import Router from 'vue-router'
 import Index from '../Index'
 import SignUpView from '../views/signUpView'
 import TeacherView from '../views/teacherView'
-import initSpecialtyView from '../views/initSpecialtyView'
+import InitSpecialtyView from '../views/initSpecialtyView'
+import TeacherInfo from '../views/teacherInfo'
 Vue.use(Router)
 
 export default new Router({
@@ -24,8 +25,12 @@ export default new Router({
     },
     {
       path: '/initSpecialtyView',
-      name: '报名管理',
-      component: initSpecialtyView
+      name: '统计',
+      component: InitSpecialtyView
+    }, {
+      path: '/teacherInfo',
+      name: '密码修改',
+      component: TeacherInfo
     }
   ]
 })

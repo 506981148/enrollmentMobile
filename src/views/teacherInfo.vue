@@ -3,7 +3,7 @@
     <van-divider
             :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
     >
-      招生日报
+      密码修改
     </van-divider>
     <van-form @submit="submitForm">
     <van-field
