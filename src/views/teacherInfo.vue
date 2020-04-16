@@ -5,7 +5,7 @@
     >
       密码修改
     </van-divider>
-    <van-form @submit="submitForm">
+    <van-form @submit="submitForm" @failed="onFailed">
     <van-field
             v-model="password"
             type="password"
@@ -21,8 +21,7 @@
             name="新密码"
             label="新密码"
             placeholder="新密码"
-            :rules="[{ required: true, message: '请填写新密码' },
-             {validator:passByCheckPass, message:'密码输入不一致'}
+            :rules="[{ required: true, message: '请填写新密码' }
             ]"
     />
     <van-field
@@ -35,6 +34,12 @@
             {validator:passByCheckPass, message:'密码输入不一致'}
             ]"
     />
+      <div style="margin: 16px;">
+        <van-button round block type="info" native-type="submit">
+          提交
+        </van-button>
+      </div>
+
     </van-form>
     <router-view />
     <van-tabbar route>
@@ -65,19 +70,15 @@ export default {
     }
   },
   methods: {
+    onFailed (errorInfo) {
+      console.log('failed', errorInfo)
+    },
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
-          this.manager.id = this.sessionUser.id
-          this.manager.managerOldPassword = this.password
-          this.manager.managerPassword = this.checkPass
-          this.putRequest('Manager/updatePassword', this.manager).then()
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
+      this.manager.id = this.sessionUser.id
+      this.manager.managerOldPassword = this.password
+      this.manager.managerPassword = this.checkPass
+      this.putRequest('Manager/updatePassword', this.manager).then()
     },
     passByCheckPass () {
       if (this.pass === this.checkPass) {
@@ -87,15 +88,17 @@ export default {
       }
     },
     chePass () {
-      this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
-      this.manager.id = this.sessionUser.id
-      this.manager.managerOldPassword = this.password
-      this.postRequest('Manager/checkPass', this.manager).then(resp => {
-        if (resp > 0) {
-          return true
-        } else {
-          return false
-        }
+      return new Promise(resolve => {
+        this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
+        this.manager.id = this.sessionUser.id
+        this.manager.managerOldPassword = this.password
+        this.postRequest('Manager/checkPass', this.manager).then(resp => {
+          if (resp === 0) {
+            resolve(false)
+          } else {
+            resolve(true)
+          }
+        })
       })
     }
   },
