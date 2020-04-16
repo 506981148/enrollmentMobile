@@ -289,7 +289,7 @@ export default {
       this.specialitiesValue = value
       this.showPicker = false
       this.getRequest('/Specialties/specialtyLimitNumebr?specialtyId=' + value).then(resp => {
-        if (resp > 0) {
+        if (resp <= 0) {
           alert('该专业录取人数已超过专业限制，请核实后再报名')
         }
       })
