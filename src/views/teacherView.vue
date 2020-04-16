@@ -104,38 +104,38 @@ export default {
       return Y + M + D
     },
     dateFormat1 (datas) {
-      var date = new Date(datas) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var date = new Date(new Date(datas).getTime()) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       // var Y = date.getFullYear() + '-'
       var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
-      var D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '日'
+      var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
       return M + D
     },
     dateFormat2 (datas) {
-      var date = new Date(datas) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var date = new Date(new Date(datas).getTime() + 86400000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       // var Y = date.getFullYear() + '-'
       var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
-      var D = (date.getDate() + 1 < 10 ? '0' + (date.getDate() + 1) : date.getDate() + 1) + '日'
+      var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
       return M + D
     },
     dateFormat3 (datas) {
-      var date = new Date(datas) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var date = new Date(new Date(datas).getTime() + 172800000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       // var Y = date.getFullYear() + '-'
       var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
-      var D = (date.getDate() + 2 < 10 ? '0' + (date.getDate() + 2) : date.getDate() + 2) + '日'
+      var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
       return M + D
     },
     dateFormat4 (datas) {
-      var date = new Date(datas) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var date = new Date(new Date(datas).getTime() + 259200000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       // var Y = date.getFullYear() + '-'
       var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
-      var D = (date.getDate() + 3 < 10 ? '0' + (date.getDate() + 3) : date.getDate() + 3) + '日'
+      var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
       return M + D
     },
     dateFormat5 (datas) {
-      var date = new Date(datas) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var date = new Date(new Date(datas).getTime() + 345600000) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
       // var Y = date.getFullYear() + '-'
       var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '月'
-      var D = (date.getDate() + 4 < 10 ? '0' + (date.getDate() + 4) : date.getDate() + 4) + '日'
+      var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + '日'
       return M + D
     },
     initSpecialtyData () {
