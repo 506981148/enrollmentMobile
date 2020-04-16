@@ -78,7 +78,14 @@ export default {
       this.manager.id = this.sessionUser.id
       this.manager.managerOldPassword = this.password
       this.manager.managerPassword = this.checkPass
-      this.putRequest('Manager/updatePassword', this.manager).then()
+      this.putRequest('Manager/updatePassword', this.manager).then(resp => {
+        if (resp.status === 200) {
+          alert('修改成功')
+        } else {
+          alert('修改失败')
+        }
+      }
+      )
     },
     passByCheckPass () {
       if (this.pass === this.checkPass) {
