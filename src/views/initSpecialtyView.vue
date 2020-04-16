@@ -1,51 +1,25 @@
 <template>
-  <div>
-    <van-divider
-            :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
-    >
-      招生日报
-    </van-divider>
-    <van-field
-            readonly
-            clickable
-            name="calendar"
-            label="时间"
-            :value="startData"
-            placeholder="点击选择日期"
-            @click="showCalendar = true"
-
-    />
-    <van-calendar title="查询时间" v-model="showCalendar"  :min-date="minDate"
-                  :max-date="maxDate" @confirm="onConfirm" />
-        <van-row>
-          <van-col span="4">
-        <van-grid :column-num="1" square :span="1">
+  <div><van-divider
+          :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
+  >
+    各专业招生数量
+  </van-divider>
+        <van-grid :column-num="5" square >
           <van-grid-item >专业</van-grid-item>
-          <van-grid-item >学前教育</van-grid-item>
-          <van-grid-item >焊接技术</van-grid-item>
-          <van-grid-item >西点烘培</van-grid-item>
-          <van-grid-item >中餐烹饪</van-grid-item>
-          <van-grid-item >机电技术</van-grid-item>
-          <van-grid-item >网络技术</van-grid-item>
-          <van-grid-item >平面设计</van-grid-item>
-          <van-grid-item >汽车维修</van-grid-item>
-          <van-grid-item >摄影</van-grid-item>
-          <van-grid-item >会计</van-grid-item>
+          <van-grid-item >人数</van-grid-item>
+          <van-grid-item >住宿</van-grid-item>
+          <van-grid-item >住宿男</van-grid-item>
+          <van-grid-item >住宿女</van-grid-item>
         </van-grid>
-          </van-col>
-          <van-col span="20">
-        <van-grid :column-num="5" square>
-          <van-grid-item >{{dateFormat1(startData)}}</van-grid-item>
-          <van-grid-item >{{dateFormat2(startData)}}</van-grid-item>
-          <van-grid-item >{{dateFormat3(startData)}}</van-grid-item>
-          <van-grid-item >{{dateFormat4(startData)}}</van-grid-item>
-          <van-grid-item >{{dateFormat5(startData)}}</van-grid-item>
-          <van-grid-item v-for="(value,index) in specialtyByDataList" :key="index" >{{value.registerNumber}}</van-grid-item>
+        <van-grid :column-num="5" square v-for="(value,index) in specialtyAllData" :key="index" >
+          <van-grid-item >{{value.specialtyName}}</van-grid-item>
+          <van-grid-item >{{value.specialtyNumber}}</van-grid-item>
+          <van-grid-item >{{value.acommodationcount}}</van-grid-item>
+          <van-grid-item >{{value.boycount}}</van-grid-item>
+          <van-grid-item >{{value.girlcount}}</van-grid-item>
         </van-grid>
-          </van-col>
-        </van-row>
     <router-view />
-    <van-tabbar route>
+    <van-tabbar v-model="active" route>
       <van-tabbar-item replace to="/initSpecialtyView"  icon="home-o">总录取</van-tabbar-item>
       <van-tabbar-item replace to="/teacherView"  icon="friends-o">日报</van-tabbar-item>
       <van-tabbar-item replace to="/teacherInfo" icon="setting-o">修改密码</van-tabbar-item>
@@ -61,24 +35,18 @@ export default {
       active: 0,
       minDate: new Date(2020, 3, 1),
       maxDate: new Date(2025, 10, 1),
+      startData: new Date(),
       specialtyByDataList: [],
       specialtyList: [],
-      specialtyAllData: [],
-      startData: this.birthdayToTime(new Date()),
-      showCalendar: false
+      specialtyAllData: []
     }
   },
   methods: {
     getStundetList () {
-      this.getRequest('/Student/getDailyReport?startDate=' + this.startData).then(resp => {
+      this.getRequest('/Student/getDailyReport?startDate=' + this.birthdayToTime(this.startData)).then(resp => {
         // this.specialtyByDataList = resp
         this.specialtyByDataList = this.studentListAll(resp)
       })
-    },
-    onConfirm (date) {
-      this.startData = `${date.getYear() + 1900}-${date.getMonth() + 1}-${date.getDate()}`
-      this.getStundetList()
-      this.showCalendar = false
     },
     studentListAll (resp) {
       let i = 0

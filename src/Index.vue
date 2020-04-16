@@ -41,7 +41,7 @@ export default {
           this.$store.commit('INIT_CURRENTHR', this.ruleForm)
           window.sessionStorage.setItem('user', JSON.stringify(this.ruleForm))
           let path = this.$route.query.redirect
-          this.$router.replace((path === '/' || path === undefined) ? '/signUpView' : path)
+          this.$router.replace((path === '/' || path === undefined) ? '/teacherView' : path)
         }
       })
     }
