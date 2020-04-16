@@ -42,7 +42,7 @@ export default {
           // window.sessionStorage.setItem('user', JSON.stringify(this.ruleForm))
           window.sessionStorage.setItem('user', JSON.stringify(resp.obj))
           let path = this.$route.query.redirect
-          this.$router.replace((path === '/' || path === undefined) ? '/teacherView' : path)
+          this.$router.replace((path === '/' || path === undefined) ? '/signUpView' : path)
         }
       })
     }
