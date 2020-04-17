@@ -5,10 +5,11 @@ import SignUpView from '../views/signUpView'
 import TeacherView from '../views/teacherView'
 import InitSpecialtyView from '../views/initSpecialtyView'
 import TeacherInfo from '../views/teacherInfo'
+import IndexTeacher from '../IndexTeacher'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',
@@ -32,6 +33,11 @@ export default new Router({
       path: '/teacherInfo',
       name: '密码修改',
       component: TeacherInfo
+    }, {
+      path: '/indexTeacher',
+      name: '首页',
+      component: IndexTeacher
     }
+
   ]
 })

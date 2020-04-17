@@ -37,8 +37,10 @@ new Vue({
 
 router.beforeEach((to, from, next) => {
   console.log(1)
-  if (to.path === '/') {
+  if (to.fullPath === '/') {
     console.log(2)
+    next()
+  } else if (to.fullPath === '/IndexTeacher') {
     next()
   } else {
     console.log(window.sessionStorage.getItem('user'))

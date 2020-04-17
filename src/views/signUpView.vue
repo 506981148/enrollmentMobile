@@ -30,6 +30,7 @@
         v-model="userForm.phoneNumber"
         type="digit"
         label="*学生电话"
+        disabled="disabled"
         :rules="[{ required: true, message: '请输入学生电话' },
         { pattern: /^[1][3-9][0-9]{9}$/, message: '学生电话输入有误' }]"
       />
@@ -560,6 +561,7 @@ export default {
   },
   mounted () {
     this.initSpecialitiesList()
+    this.userForm.phoneNumber = JSON.parse(window.sessionStorage.getItem('user')).phoneNumber
   }
 }
 </script>

@@ -1,23 +1,27 @@
 <template>
 <div>
-  <van-form @submit="login" @failed="onFailed">
-  <van-field
-          v-model="studentCodeLogin.phoneNumber"
-          type="digit"
-          label="*学生电话"
-          :rules="[{ required: true, message: '请输入学生电话' },
-        { pattern: /^[1][3-9][0-9]{9}$/, message: '学生电话输入有误' }]"
-  />
-  <input v-model="studentCodeLogin.phoneNumberCode">
-  <button @click="getLoginCode">获取验证码</button>
+  <van-form @submit="login">
+    <van-field
+            v-model="manager.managerID"
+            name="用户名"
+            label="用户名"
+            placeholder="用户名"
+            :rules="[{ required: true, message: '请填写用户名' }]"
+    />
+    <van-field
+            v-model="manager.managerPassword"
+            type="password"
+            name="密码"
+            label="密码"
+            placeholder="密码"
+            :rules="[{ required: true, message: '请填写密码' }]"
+    />
     <div style="margin: 16px;">
       <van-button round block type="info" native-type="submit">
         提交
       </van-button>
     </div>
-  <button @click="logOut">登出</button>
   </van-form>
-  <router-view></router-view>
 </div>
 </template>
 
@@ -26,9 +30,9 @@ export default {
   name: 'Index',
   data () {
     return {
-      studentCodeLogin: {
-        phoneNumber: '',
-        phoneNumberCode: ''
+      manager: {
+        managerID: '',
+        managerPassword: ''
       }
     }
   },
@@ -41,13 +45,13 @@ export default {
       this.$router.replace('/')
     },
     login () {
-      this.postRequest('/loginCode', this.studentCodeLogin).then(resp => {
+      this.postRequest('/login', this.manager).then(resp => {
         if (resp) {
           this.$store.commit('INIT_CURRENTHR', this.studentCodeLogin)
           // window.sessionStorage.setItem('user', JSON.stringify(this.ruleForm))
           window.sessionStorage.setItem('user', JSON.stringify(resp.obj))
           let path = this.$route.query.redirect
-          this.$router.replace((path === '/' || path === undefined) ? '/signUpView' : path)
+          this.$router.replace((path === '/' || path === undefined) ? '/initSpecialtyView' : path)
         }
       })
     },
