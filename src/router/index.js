@@ -35,7 +35,7 @@ export default new Router({
       component: TeacherInfo
     }, {
       path: '/indexTeacher',
-      name: '首页',
+      name: '登陆',
       component: IndexTeacher
     }
 

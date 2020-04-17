@@ -7,7 +7,8 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 import store from './store'
 // import VeeValidate, { Validator } from 'vee-validate'
-// import {initSignUp} from './router/initsignUp'
+// import {initStudent} from './router/initStudent'
+// import {initTeacher} from './router/initTeacher'
 // import zh from 'vee-validate/dist/locale/zh_CN'
 
 import {postRequest, postKeyValueRequest, putRequest, deleteRequest, getRequest} from './utils/api'
@@ -44,11 +45,24 @@ router.beforeEach((to, from, next) => {
     next()
   } else {
     console.log(window.sessionStorage.getItem('user'))
-    if (window.sessionStorage.getItem('user')) {
+    if (window.sessionStorage.getItem('user') !== null) {
       // initMenu(router, store)
-      // initSignUp(router, store)
+      if (to.path !== '/signUpView') {
+        next('/')
+      }
+      console.log(111)
+      // initStudent(router, store)
+      next()
+    } else if (window.sessionStorage.getItem('teacher')) {
+      if (to.path === '/signUpView') {
+        next('/indexTeacher')
+      }
+      console.log(222)
+      // initTeacher(router, store)
+      console.log(to.path)
       next()
     } else {
+      console.log(333)
       next('/')
     }
   }

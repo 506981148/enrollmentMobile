@@ -38,6 +38,7 @@ export default {
     },
     logOut () {
       window.sessionStorage.removeItem('user')
+      window.sessionStorage.removeItem('teacher')
       this.$router.replace('/')
     },
     login () {

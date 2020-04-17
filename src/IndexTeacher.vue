@@ -49,7 +49,7 @@ export default {
         if (resp) {
           this.$store.commit('INIT_CURRENTHR', this.studentCodeLogin)
           // window.sessionStorage.setItem('user', JSON.stringify(this.ruleForm))
-          window.sessionStorage.setItem('user', JSON.stringify(resp.obj))
+          window.sessionStorage.setItem('teacher', JSON.stringify(resp.obj))
           let path = this.$route.query.redirect
           this.$router.replace((path === '/' || path === undefined) ? '/initSpecialtyView' : path)
         }
