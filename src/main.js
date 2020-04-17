@@ -37,32 +37,25 @@ new Vue({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(1)
   if (to.fullPath === '/') {
-    console.log(2)
     next()
   } else if (to.fullPath === '/IndexTeacher') {
     next()
   } else {
-    console.log(window.sessionStorage.getItem('user'))
     if (window.sessionStorage.getItem('user') !== null) {
       // initMenu(router, store)
       if (to.path !== '/signUpView') {
         next('/')
       }
-      console.log(111)
       // initStudent(router, store)
       next()
     } else if (window.sessionStorage.getItem('teacher')) {
       if (to.path === '/signUpView') {
         next('/indexTeacher')
       }
-      console.log(222)
       // initTeacher(router, store)
-      console.log(to.path)
       next()
     } else {
-      console.log(333)
       next('/')
     }
   }

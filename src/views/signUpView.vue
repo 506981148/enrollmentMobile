@@ -296,6 +296,47 @@ export default {
       })
       console.log(`当前值：${value}, 当前索引：${index}`)
     },
+    onMountedSpecialty () {
+      if (this.userForm.specialtyId !== null) {
+        var len = this.specialitiesListOld.length
+        for (var i = 0; i < len; i++) {
+          if (this.userForm.specialtyId === this.specialitiesListOld[i].id) {
+            this.specialitiesValue = this.specialitiesListOld[i].specialtyName
+          }
+        }
+        console.log(this.specialitiesValue)
+      }
+    },
+    onMountSchoolUniformSize () {
+      if (this.userForm.schoolUniformSize !== null) {
+        var len = this.schoolUniformSizeList.length
+        for (var i = 0; i < len; i++) {
+          if (this.userForm.schoolUniformSize === this.schoolUniformSizeList[i].value) {
+            this.schoolUniformSizeValue = this.schoolUniformSizeList[i].name
+          }
+        }
+        if (this.schoolUniformSizeValue === '特体') {
+          this.schoolUniformSizeShow = true
+        } else {
+          this.schoolUniformSizeShow = false
+        }
+      }
+    },
+    onMountUniformSize () {
+      if (this.userForm.uniformSize !== null) {
+        var len = this.schoolUniformSizeList.length
+        for (var i = 0; i < len; i++) {
+          if (this.userForm.uniformSize === this.schoolUniformSizeList[i].value) {
+            this.uniformSizeValue = this.schoolUniformSizeList[i].name
+          }
+        }
+        if (this.uniformSizeValue === '特体') {
+          this.uniformSizeShow = true
+        } else {
+          this.uniformSizeShow = false
+        }
+      }
+    },
     onChangeSchoolUniformSize (picker, value, index) {
       var len = this.schoolUniformSizeList.length
       for (var i = 0; i < len; i++) {
@@ -401,8 +442,8 @@ export default {
         this.userForm.birthPlace = resp.name
       })
     },
-    initSpecialitiesList () {
-      this.getRequest('/Specialties/list').then(resp => {
+    async initSpecialitiesList () {
+      await this.getRequest('/Specialties/list').then(resp => {
         this.specialitiesListOld = resp
         var len = this.specialitiesListOld.length
         for (var i = 0; i < len; i++) {
@@ -516,12 +557,12 @@ export default {
       var tuition = 0
       var bookFee = 0
       var acommodationFee = 0
-      var len = this.specialitiesList.length
+      var len = this.specialitiesListOld.length
       for (var i = 0; i < len; i++) {
-        if (this.specialitiesList[i].id === this.userForm.specialtyId) {
-          tuition = this.specialitiesList[i].tuition
-          bookFee = this.specialitiesList[i].bookFee
-          acommodationFee = this.specialitiesList[i].acommodationFee
+        if (this.specialitiesListOld[i].id === this.userForm.specialtyId) {
+          tuition = this.specialitiesListOld[i].tuition
+          bookFee = this.specialitiesListOld[i].bookFee
+          acommodationFee = this.specialitiesListOld[i].acommodationFee
         }
       }
       var totle = bookFee
@@ -531,15 +572,18 @@ export default {
       if (this.userForm.householdType !== 0 && this.userForm.incomeSupport === 0 && this.userForm.buildFile === 0) {
         totle = totle + tuition
       }
+      console.log(totle)
       this.userForm.tuitionShouldCharge = totle
       if (this.userForm.ps !== '') {
         this.putRequest('/Student/update', this.userForm).then(
+          alert('报名信息修改成功')
         )
       } else {
         this.userForm.registerDate = new Date()
         this.userForm.ps = '学生:' + this.userForm.name + '在' + this.userForm.registerDate + '报名了。'
         this.userForm.enrollType = 1
-        this.postRequest('/Student/insert', this.userForm).then(
+        this.putRequest('/Student/update', this.userForm).then(
+          alert('报名成功')
         )
       }
     },
@@ -559,9 +603,12 @@ export default {
       })
     }
   },
-  mounted () {
-    this.initSpecialitiesList()
-    this.userForm.phoneNumber = JSON.parse(window.sessionStorage.getItem('user')).phoneNumber
+  async mounted () {
+    await this.initSpecialitiesList()
+    this.userForm = JSON.parse(window.sessionStorage.getItem('user'))
+    this.onMountedSpecialty()
+    this.onMountSchoolUniformSize()
+    this.onMountUniformSize()
   }
 }
 </script>

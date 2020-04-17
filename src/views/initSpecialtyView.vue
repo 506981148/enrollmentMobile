@@ -109,7 +109,6 @@ export default {
     initSpecialtyData () {
       this.getRequest('/Student/getRecruitNumberBySpecialty').then(resp => {
         this.specialtyAllData = resp
-        console.log(resp)
       })
     }
 
