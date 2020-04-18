@@ -1,22 +1,26 @@
 <template>
 <div>
-
-  <div class="list">
-    <div class="left">手机号码</div>
-    <div class="mid">
-      <input type="text" maxlength="11" v-model="newcall" placeholder="请输入">
-    </div>
+  <van-form @submit="onSubmit" @failed="onFailed">
+    <van-field
+            v-model="newcall"
+            label="手机号"
+            name="name"
+            class="left"
+            :rules="[{ required: true, message: '请输入电话' },
+            { pattern: /^[1][3-9][0-9]{9}$/, message: '电话输入有误' }]"
+    />
     <div class="right">
       <van-button @click="getyzcode" :disabled="attcode" v-if="showbtn">获取验证码</van-button>
       <button class="tsbtn" v-else>{{code_ts}}</button>
     </div>
-  </div>
-  <div class="list">
-    <div class="left">验证码</div>
-    <div class="mid">
-      <input type="number" maxlength="6" v-model="studentCodeLogin.phoneNumberCode" placeholder="请输入">
-    </div>
-  </div>
+  </van-form>
+  <van-field
+          v-model="studentCodeLogin.phoneNumberCode"
+          type="digit"
+          label="验证码"
+          :rules="[{ required: true, message: '请输入验证码' },
+        { pattern: /^[0-9]{6}$/, message: '验证码输入有误' }]"
+  />
   <van-button @click="login" >登陆</van-button>
   <router-view></router-view>
 </div>
