@@ -69,8 +69,8 @@
                  { pattern: /^[1][3-9][0-9]{9}$/, message: '家长电话输入有误' }]"
                  name="guardianPhoneNumber"/>
       <van-field
-        :rules="[ { validator: specialtyIdruateByBoy, message: '男生禁止报名学前教育' },
-                  { validator: specialtyIdruateByGril, message: '女生禁止报名焊接技术' },
+        :rules="[ { validator: specialtyIdruateByBoy, message: '男生禁止报名学前教育' ,trigger: 'onChange' },
+                  { validator: specialtyIdruateByGril, message: '女生禁止报名焊接技术' ,trigger: 'onChange'},
                   { validator: specialtyIdruateByNull, message: '请选择专业' }]"
         readonly
         clickable
@@ -280,7 +280,7 @@ export default {
     }
   },
   methods: {
-    onChangeSpecialty (picker, value, index) {
+    async onChangeSpecialty (picker, value, index) {
       var len = this.specialitiesListOld.length
       for (var i = 0; i < len; i++) {
         if (value === this.specialitiesListOld[i].specialtyName) {
@@ -289,7 +289,7 @@ export default {
       }
       this.specialitiesValue = value
       this.showPicker = false
-      this.getRequest('/Specialties/specialtyLimitNumebr?specialtyId=' + value).then(resp => {
+      await this.getRequest('/Specialties/specialtyLimitNumebr?specialtyId=' + this.userForm.specialtyId).then(resp => {
         if (resp <= 0) {
           alert('该专业录取人数已超过专业限制，请核实后再报名')
         }
@@ -517,7 +517,7 @@ export default {
     },
     identityIdrulateNew (val) {
       return new Promise(resolve => {
-        if (this.userForm.id === 0) {
+        if (this.userForm.identityId !== JSON.parse(window.sessionStorage.getItem('user')).identityId) {
           this.getRequest('/DropoutStudent/selectStudentByID?identityId=' + val).then(resp => {
             if (resp === 2) {
               console.log(1)
@@ -574,22 +574,29 @@ export default {
       }
       console.log(totle)
       this.userForm.tuitionShouldCharge = totle
-      if (this.userForm.id !== '') {
+      if (this.userForm.ps !== '' && this.userForm.ps !== null) {
         this.putRequest('/Student/update', this.userForm).then(
           alert('报名信息修改成功')
         )
       } else {
         this.userForm.registerDate = new Date()
-        this.userForm.ps = '学生:' + this.userForm.name + '在' + this.userForm.registerDate + '报名了。'
+        this.userForm.ps = '学生:' + this.userForm.name + '在' + this.registerDateToTime(this.userForm.registerDate) + '报名了。'
         this.userForm.enrollType = 1
-        this.putRequest('/Student/insert', this.userForm).then(
+        this.postRequest('/Student/insert', this.userForm).then(
           alert('报名成功')
         )
       }
     },
+    registerDateToTime (registerDate) {
+      var date = new Date(registerDate) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+      var Y = date.getFullYear() + '-'
+      var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+      var D = date.getDate() + ' '
+      return Y + M + D
+    },
     teacherCoderulate (val) {
       return new Promise(resolve => {
-        if (val !== '') {
+        if (val !== '' && val !== null) {
           this.getRequest('/Teacher/selectTeacherByCode?teacherCode=' + val).then(resp => {
             if (resp.teacherName !== undefined) {
               resolve(true)
