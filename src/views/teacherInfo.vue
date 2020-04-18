@@ -74,7 +74,7 @@ export default {
       console.log('failed', errorInfo)
     },
     submitForm (formName) {
-      this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
+      this.sessionUser = JSON.parse(window.sessionStorage.getItem('teacher'))
       this.manager.id = this.sessionUser.id
       this.manager.managerOldPassword = this.password
       this.manager.managerPassword = this.checkPass
@@ -96,7 +96,7 @@ export default {
     },
     chePass () {
       return new Promise(resolve => {
-        this.sessionUser = JSON.parse(window.sessionStorage.getItem('user'))
+        this.sessionUser = JSON.parse(window.sessionStorage.getItem('teacher'))
         this.manager.id = this.sessionUser.id
         this.manager.managerOldPassword = this.password
         this.postRequest('Manager/checkPass', this.manager).then(resp => {
