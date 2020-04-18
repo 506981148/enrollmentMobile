@@ -13,7 +13,7 @@
       <van-button @click="getyzcode" :disabled="attcode" v-if="showbtn">获取验证码</van-button>
       <button class="tsbtn" v-else>{{code_ts}}</button>
     </div>
-  </van-form>
+
   <van-field
           v-model="studentCodeLogin.phoneNumberCode"
           type="digit"
@@ -21,7 +21,12 @@
           :rules="[{ required: true, message: '请输入验证码' },
         { pattern: /^[0-9]{6}$/, message: '验证码输入有误' }]"
   />
-  <van-button @click="login" >登陆</van-button>
+  <div style="margin: 16px;">
+    <van-button round block type="info" native-type="submit">
+      登陆
+    </van-button>
+  </div>
+  </van-form>
   <router-view></router-view>
 </div>
 </template>
@@ -53,7 +58,8 @@ export default {
       window.sessionStorage.removeItem('teacher')
       this.$router.replace('/')
     },
-    login () {
+    onSubmit () {
+      this.studentCodeLogin.phoneNumber = this.newcall
       this.postRequest('/loginCode', this.studentCodeLogin).then(resp => {
         if (resp) {
           this.$store.commit('INIT_CURRENTHR', this.studentCodeLogin)
