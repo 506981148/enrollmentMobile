@@ -574,7 +574,7 @@ export default {
       }
       console.log(totle)
       this.userForm.tuitionShouldCharge = totle
-      if (this.userForm.ps !== '') {
+      if (this.userForm.id !== '') {
         this.putRequest('/Student/update', this.userForm).then(
           alert('报名信息修改成功')
         )
@@ -582,7 +582,7 @@ export default {
         this.userForm.registerDate = new Date()
         this.userForm.ps = '学生:' + this.userForm.name + '在' + this.userForm.registerDate + '报名了。'
         this.userForm.enrollType = 1
-        this.putRequest('/Student/update', this.userForm).then(
+        this.putRequest('/Student/insert', this.userForm).then(
           alert('报名成功')
         )
       }
