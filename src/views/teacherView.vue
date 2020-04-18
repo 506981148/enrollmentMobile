@@ -5,7 +5,9 @@
     >
       招生日报
     </van-divider>
+    <div style="margin: 10px 10px 60px 10px;font-size: 14px; font-weight:normal">
     <van-field
+            style="border-radius:10px 10px 0px 0px"
             readonly
             clickable
             name="calendar"
@@ -44,6 +46,7 @@
         </van-grid>
           </van-col>
         </van-row>
+    </div>
     <router-view />
     <van-tabbar route>
       <van-tabbar-item replace to="/initSpecialtyView"  icon="home-o">总录取</van-tabbar-item>
@@ -51,6 +54,7 @@
       <van-tabbar-item replace to="/teacherInfo" icon="setting-o">修改密码</van-tabbar-item>
     </van-tabbar>
   </div>
+
 </template>
 
 <script>

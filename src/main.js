@@ -44,13 +44,13 @@ router.beforeEach((to, from, next) => {
   } else {
     if (window.sessionStorage.getItem('user') !== null) {
       // initMenu(router, store)
-      if (to.path !== '/signUpView') {
+      if (to.path !== '/signUpView' && to.path !== '/signUpInfoView' && to.path !== '/signUpYesView') {
         next('/')
       }
       // initStudent(router, store)
       next()
     } else if (window.sessionStorage.getItem('teacher')) {
-      if (to.path === '/signUpView') {
+      if (to.path === '/signUpView' || to.path === '/signUpViewInfo') {
         next('/indexTeacher')
       }
       // initTeacher(router, store)

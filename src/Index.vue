@@ -1,31 +1,39 @@
 <template>
 <div>
   <van-form @submit="onSubmit" @failed="onFailed">
+    <div style="text-align:center;font-size: 30px; color: #1989fa; margin-top:30px ">阜新一职专报名系统</div>
+    <div style="margin: 20px;">
     <van-field
+            style="border-radius:10px 10px 0px 0px;"
             v-model="newcall"
             label="手机号"
             name="name"
-            class="left"
+            maxlength="11"
+            placeholder="手机号"
             :rules="[{ required: true, message: '请输入电话' },
             { pattern: /^[1][3-9][0-9]{9}$/, message: '电话输入有误' }]"
-    />
-    <div class="right">
-      <van-button @click="getyzcode" :disabled="attcode" v-if="showbtn">获取验证码</van-button>
-      <button class="tsbtn" v-else>{{code_ts}}</button>
-    </div>
+    >
+    </van-field>
 
   <van-field
+          style="border-radius:0px 0px 10px 10px;"
           v-model="studentCodeLogin.phoneNumberCode"
           type="digit"
           label="验证码"
+          placeholder="验证码"
           :rules="[{ required: true, message: '请输入验证码' },
         { pattern: /^[0-9]{6}$/, message: '验证码输入有误' }]"
   />
+      <div style="border-radius:10px; float: right">
+        <van-button @click="getyzcode" :disabled="attcode" v-if="showbtn">获取验证码</van-button>
+        <button class="tsbtn" v-else>{{code_ts}}</button>
+      </div>
   <div style="margin: 16px;">
     <van-button round block type="info" native-type="submit">
       登陆
     </van-button>
   </div>
+    </div>
   </van-form>
   <router-view></router-view>
 </div>
@@ -66,7 +74,13 @@ export default {
           // window.sessionStorage.setItem('user', JSON.stringify(this.ruleForm))
           window.sessionStorage.setItem('user', JSON.stringify(resp.obj))
           let path = this.$route.query.redirect
-          this.$router.replace((path === '/' || path === undefined) ? '/signUpView' : path)
+          if (resp.obj.admissionType === null) {
+            this.$router.replace((path === '/' || path === undefined) ? '/signUpView' : path)
+          } else if (resp.obj.admissionType === 0) {
+            this.$router.replace((path === '/' || path === undefined) ? '/signUpInfoView' : path)
+          } else if (resp.obj.admissionType === 2) {
+            this.$router.replace((path === '/' || path === undefined) ? '/signUpYesView' : path)
+          }
         }
       })
     },

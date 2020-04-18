@@ -4,6 +4,7 @@
   >
     各专业招生数量
   </van-divider>
+    <div style="margin: 10px 10px 60px 10px;font-size: 14px; font-weight:normal">
         <van-grid :column-num="5" square >
           <van-grid-item >专业</van-grid-item>
           <van-grid-item >人数</van-grid-item>
@@ -18,6 +19,7 @@
           <van-grid-item >{{value.boycount}}</van-grid-item>
           <van-grid-item >{{value.girlcount}}</van-grid-item>
         </van-grid>
+    </div>
     <router-view />
     <van-tabbar v-model="active" route>
       <van-tabbar-item replace to="/initSpecialtyView"  icon="home-o">总录取</van-tabbar-item>

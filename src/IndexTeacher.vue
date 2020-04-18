@@ -1,7 +1,10 @@
 <template>
 <div>
+  <div style="text-align:center;font-size: 30px; color: #1989fa; margin-top:30px ">阜新一职专报名系统</div>
+  <div style="margin: 20px;">
   <van-form @submit="login">
     <van-field
+            style="border-radius:10px 10px 0px 0px;"
             v-model="manager.managerID"
             name="用户名"
             label="用户名"
@@ -9,6 +12,7 @@
             :rules="[{ required: true, message: '请填写用户名' }]"
     />
     <van-field
+            style="border-radius:10px;"
             v-model="manager.managerPassword"
             type="password"
             name="密码"
@@ -22,6 +26,7 @@
       </van-button>
     </div>
   </van-form>
+</div>
 </div>
 </template>
 

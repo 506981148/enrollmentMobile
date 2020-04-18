@@ -1,19 +1,33 @@
 <template>
   <div>
     <van-notice-bar :scrollable="true" left-icon="info-o">
-      以下内容请如实填写，将用于发放录取通知书！报名结束后，请您到学校招生办参加面试并交费后，即可领取录取通知书！
+      报名结束后，请您到学校招生办参加面试并交费后，即可领取录取通知书！
     </van-notice-bar>
     <van-steps :active="active" style="margin: 10px ;border-radius:10px;">
       <van-step>报名信息录入</van-step>
       <van-step>等待录取</van-step>
       <van-step>完成录取</van-step>
     </van-steps>
+    <van-empty
+            style="background-color: white; margin: 10px; border-radius:10px;"
+            class="custom-image"
+            image="../../static/good.png"
+            description="录取成功"
+    >
+      <div style="font-size: 14px; margin: 10px">
+        &ensp; &ensp; {{signUpInPs.type_name}}<br>
+        您的学费：学费为{{tuitionDate.tuition}}元，住宿费为{{tuitionDate.acommodationFee}}元，书费为{{tuitionDate.bookFee}}元，合计{{userForm.tuitionShouldCharge}}元<br>
+        学校地址：阜新市海州区西山路（阜新市教育局西侧）<br>
+        咨询电话：2901118 2901119<br>
+      </div>
+    </van-empty>
     <van-form @submit="onSubmit" @failed="onFailed" style="margin: 10px">
       <van-field
         style="border-radius:10px 10px 0px 0px"
         v-model="userForm.name"
         label="*姓名"
         name="name"
+        disabled="disabled"
         :rules="[{ required: true, message: '请输入姓名' },
           { pattern: /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/, message: '姓名输入有误' }]"
       />
@@ -21,6 +35,7 @@
         v-model="userForm.identityId"
         label="*身份证号"
         name="identityId"
+        disabled="disabled"
         :rules="[{ required:true, message:'请输入身份证号'},
           {validator:identityIdrulateOld, message: '该身份证号码是往届生'},
           {validator:identityIdrulateNew, message: '该身份证号码已报名'},
@@ -37,8 +52,9 @@
         :rules="[{ required: true, message: '请输入学生电话' },
         { pattern: /^[1][3-9][0-9]{9}$/, message: '学生电话输入有误' }]"
       />
-      <van-field v-model="userForm.birthPlace" label="*户籍地" disabled />
+      <van-field v-model="userForm.birthPlace" label="*户籍地" disabled="disabled" />
       <van-field v-model="userForm.nationality" label="*民族"
+                 disabled="disabled"
                  :rules="[{ required: true, message: '请输入民族' },
                   { pattern: /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{1,20}$/, message: '民族输入有误' }]"
                  name="nationality"/>
@@ -48,30 +64,34 @@
           <van-radio-group
             v-model="userForm.gender"
             direction="horizontal"
+            disabled="disabled"
           >
             <van-radio :name="item.value" v-for="(item, index) in genderTypes" :key="index" disabled>{{item.name}} </van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field v-model="userForm.livePlace" label="*家庭住址" />
+      <van-field v-model="userForm.livePlace" label="*家庭住址" disabled="disabled"/>
       <van-field v-model="userForm.guardianName"
+                 disabled="disabled"
                  label="*家长姓名"
                  :rules="[{ required: true, message: '请输入家长姓名' },
                   { pattern: /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/, message: '家长姓名输入有误' }]"
       ></van-field>
-      <van-field label="家长关系" :rules="[{ validator: guardianRelationRules, message: '请选择监护人关系' }]">
+      <van-field label="家长关系" :rules="[{ validator: guardianRelationRules, message: '请选择监护人关系' }]" disabled="disabled">
         <template #input>
-          <van-radio-group v-model="userForm.guardianRelation" direction="horizontal"
+          <van-radio-group v-model="userForm.guardianRelation" direction="horizontal" disabled="disabled"
                            >
             <van-radio :name="item.value" v-for="(item, index) in guardianRelationList" :key="index" :rules="[{ required: true, message: '请输入长姓名' }]" >{{item.name}}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
       <van-field v-model="userForm.guardianPhoneNumber" label="家长电话"
+                 disabled="disabled"
                  :rules="[{ required: true, message: '请输入家长电话' },
                  { pattern: /^[1][3-9][0-9]{9}$/, message: '家长电话输入有误' }]"
                  name="guardianPhoneNumber"/>
       <van-field
+        disabled="disabled"
         :rules="[ { validator: specialtyIdruateByBoy, message: '男生禁止报名学前教育' ,trigger: 'onChange' },
                   { validator: specialtyIdruateByGril, message: '女生禁止报名焊接技术' ,trigger: 'onChange'},
                   { validator: specialtyIdruateByNull, message: '请选择专业' }]"
@@ -81,8 +101,6 @@
         :value="specialitiesValue"
         label="专业"
         placeholder="点击选择专业"
-        @click="showPicker = true"
-
       />
       <van-popup v-model="showPicker" position="bottom">
         <van-picker
@@ -93,35 +111,35 @@
           @cancel="showPicker = false"
         />
       </van-popup>
-      <van-field label="是否住宿" :rules="[{ validator: accommodationRules, message: '请选择是否住宿' }]">
+      <van-field label="是否住宿" :rules="[{ validator: accommodationRules, message: '请选择是否住宿' }]" disabled="disabled">
         <template #input>
-          <van-radio-group v-model="userForm.accommodation" direction="horizontal">
+          <van-radio-group v-model="userForm.accommodation" direction="horizontal" disabled="disabled">
             <van-radio :name="item.value" v-for="(item, index) in accommodationTypes" :key="index">{{item.name}}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field label="是否为低保户" :rules="[{ validator: incomeSupportRules, message: '请选择是否为低保户' }]">
+      <van-field label="是否为低保户" :rules="[{ validator: incomeSupportRules, message: '请选择是否为低保户' }]" disabled="disabled">
         <template #input>
-          <van-radio-group v-model="userForm.incomeSupport" direction="horizontal">
+          <van-radio-group v-model="userForm.incomeSupport" direction="horizontal" disabled="disabled">
             <van-radio :name="item.value" v-for="(item, index) in buildFileTypes" :key="index">{{item.name}}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field label="是否建档立卡" :rules="[{ validator: buildFileRules, message: '请选择是否建档立卡' }]">
+      <van-field label="是否建档立卡" :rules="[{ validator: buildFileRules, message: '请选择是否建档立卡' }]" disabled="disabled">
         <template #input>
-          <van-radio-group v-model="userForm.buildFile" direction="horizontal">
+          <van-radio-group v-model="userForm.buildFile" direction="horizontal" disabled="disabled">
             <van-radio :name="item.value" v-for="(item, index) in buildFileTypes" :key="index">{{item.name}}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field label="户籍性质" :rules="[{ validator: householdTypeRules, message: '请选择户籍性质' }]">
+      <van-field label="户籍性质" :rules="[{ validator: householdTypeRules, message: '请选择户籍性质' }]" disabled="disabled">
         <template #input>
-          <van-radio-group v-model="userForm.householdType" direction="horizontal">
+          <van-radio-group v-model="userForm.householdType" direction="horizontal" disabled="disabled">
             <van-radio :name="item.value" v-for="(item, index) in householdTypes" :key="index">{{item.name}}</van-radio>
           </van-radio-group>
         </template>
       </van-field>
-      <van-field v-model="userForm.achievement" label="中考成绩" type="number" :rules="[{ required: true, message: '请输入中考成绩'}]" />
+      <van-field v-model="userForm.achievement" label="中考成绩" type="number" :rules="[{ required: true, message: '请输入中考成绩'}]" disabled="disabled"/>
       <van-field v-model="userForm.teacherCode" label="老师邀请码"
                  :rules="[{validator:teacherCoderulate,message: '老师邀请码有误'}]">
       </van-field>
@@ -133,8 +151,7 @@
         :value="schoolUniformSizeValue"
         label="校服尺寸"
         placeholder="点击选择校服尺寸"
-        @click="schoolUniformSizeShowPicker = true"
-
+        disabled="disabled"
       />
       <van-popup v-model="schoolUniformSizeShowPicker" position="bottom">
         <van-picker
@@ -143,6 +160,7 @@
           :columns="schoolUniformSizecolumns"
           @change="onChangeSchoolUniformSize"
           @cancel="schoolUniformSizeShowPicker = false"
+          disabled="disabled"
         />
       </van-popup>
       <van-field v-show="schoolUniformSizeShow"
@@ -157,8 +175,7 @@
           :value="uniformSizeValue"
           label="军训服尺寸"
           placeholder="点击选择军训服尺寸"
-          @click="uniformSizeShowPicker = true"
-
+          disabled="disabled"
         />
         <van-popup v-model="uniformSizeShowPicker" position="bottom">
           <van-picker
@@ -167,17 +184,13 @@
             :columns="schoolUniformSizecolumns"
             @change="onChangeUniformSize"
             @cancel="uniformSizeShowPicker = false"
+            disabled="disabled"
           />
         </van-popup>
       <van-field v-show="uniformSizeShow"
                  v-model="userForm.uniformSizeNote"
                  label="军训服尺寸备注"
-                 :rules="[{ validator: uniformSizeNoteRules, message: '请输入军训服尺寸备注'}]" />
-      <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit">
-          提交
-        </van-button>
-      </div>
+                 :rules="[{ validator: uniformSizeNoteRules, message: '请输入军训服尺寸备注'}]" disabled="disabled"/>
   </van-form>
     <router-view class="homeRouterView"/>
   </div>
@@ -223,7 +236,13 @@ export default {
         admissionType: 0,
         ps: ''
       },
-      active: 0,
+      tuitionDate: {
+        tuition: 0,
+        bookFee: 0,
+        acommodationFee: 0
+      },
+      signUpInPs: '',
+      active: 2,
       index: '',
       showPicker: false,
       specialities: 0,
@@ -446,6 +465,11 @@ export default {
         this.userForm.birthPlace = resp.name
       })
     },
+    initSignUpInPs () {
+      this.getRequest('/getConfigureById?codeId=2&typeId=1').then(resp => {
+        this.signUpInPs = resp
+      })
+    },
     async initSpecialitiesList () {
       await this.getRequest('/Specialties/list').then(resp => {
         this.specialitiesListOld = resp
@@ -556,57 +580,23 @@ export default {
     onFailed (errorInfo) {
       console.log('failed', errorInfo)
     },
-
-    onSubmit () {
-      var tuition = 0
-      var bookFee = 0
-      var acommodationFee = 0
+    inittuition () {
       var len = this.specialitiesListOld.length
       for (var i = 0; i < len; i++) {
         if (this.specialitiesListOld[i].id === this.userForm.specialtyId) {
-          tuition = this.specialitiesListOld[i].tuition
-          bookFee = this.specialitiesListOld[i].bookFee
-          acommodationFee = this.specialitiesListOld[i].acommodationFee
+          this.tuitionDate.tuition = this.specialitiesListOld[i].tuition
+          this.tuitionDate.bookFee = this.specialitiesListOld[i].bookFee
+          this.tuitionDate.acommodationFee = this.specialitiesListOld[i].acommodationFee
         }
       }
-      var totle = bookFee
-      if (this.userForm.accommodation === 1) {
-        totle = totle + acommodationFee
+      if (this.userForm.accommodation !== 1) {
+        this.tuitionDate.acommodationFee = 0
       }
-      if (this.userForm.householdType !== 0 && this.userForm.incomeSupport === 0 && this.userForm.buildFile === 0) {
-        totle = totle + tuition
+      if (this.userForm.householdType === 0 || this.userForm.incomeSupport !== 0 || this.userForm.buildFile !== 0) {
+        this.tuitionDate.tuition = 0
       }
-      console.log(totle)
-      this.userForm.tuitionShouldCharge = totle
-      if (this.userForm.ps !== '' && this.userForm.ps !== null) {
-        this.putRequest('/Student/update', this.userForm).then(resp => {
-          if (resp.status === 200) {
-            alert('报名信息修改成功')
-            window.sessionStorage.setItem('user', JSON.stringify(this.userForm))
-            this.$router.push('/signUpInfoView')
-          } else {
-            alert('报名信息修改失败，请联系管理员')
-            this.$router.push('/')
-          }
-        }
-        )
-      } else {
-        this.userForm.registerDate = new Date()
-        this.userForm.ps = '学生:' + this.userForm.name + '在' + this.registerDateToTime(this.userForm.registerDate) + '报名了。'
-        this.userForm.enrollType = 1
-        this.userForm.admissionType = 0
-        this.postRequest('/Student/insert', this.userForm).then(resp => {
-          if (resp.status === 200) {
-            window.sessionStorage.setItem('user', JSON.stringify(this.userForm))
-            alert('报名成功')
-            this.$router.push('/signUpInfoView')
-          } else {
-            alert('报名失败，请联系管理员')
-            this.$router.push('/')
-          }
-        }
-        )
-      }
+    },
+    onSubmit () {
     },
     registerDateToTime (registerDate) {
       var date = new Date(registerDate) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
@@ -635,8 +625,10 @@ export default {
     await this.initSpecialitiesList()
     this.userForm = JSON.parse(window.sessionStorage.getItem('user'))
     this.onMountedSpecialty()
+    this.initSignUpInPs()
     this.onMountSchoolUniformSize()
     this.onMountUniformSize()
+    this.inittuition()
   }
 }
 </script>
